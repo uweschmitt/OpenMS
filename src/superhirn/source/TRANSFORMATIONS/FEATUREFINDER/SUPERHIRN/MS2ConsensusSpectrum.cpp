@@ -435,8 +435,6 @@ namespace OpenMS
     av += fabs(getTR() - frag->getTR());
     av += fabs(getStartTR() - frag->getStartTR());
     return av;
-
-    return corMS2 / corSpec;
   }
 
 

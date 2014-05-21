@@ -67,94 +67,74 @@ class LowlevelComparator
 				{
 					default:
 						return 0;
-						break;
 					case 1:
 						return 1-0.5;
-						break;
 					case 2:
 						return 1-0.8;
-						break;
 					case 3:
 						return 1-0.6;
-						break;
 					case 4:
 						return 1-0.8;
-						break;
 					case 5:
 						return 1-0.7;
-						break;
 				}
+
 			break;
 			case 1:
 				switch(y)
 				{
 					default:
 						return 0;
-						break;
 					case 2:
 						return 1-0.3;
-						break;
 					case 3:
 						return 1-0.8;
-						break;
 					case 4:
 						return 1-0.8;
-						break;
 					case 5:
 						return 1-0.8;
-						break;
 				}
-
 			break;
+
 			case 2:
 				switch(y)
 				{
 					default:
 						return 0;
-						break;
 					case 3:
 						return 1-0.8;
-						break;
 					case 4:
 						return 1-0.8;
-						break;
 					case 5:
 						return 1-0.8;
-						break;
 				}
-
 			break;
+      
 			case 3:
 				switch(y)
 				{
 					default:
 						return 0;
-						break;
 					case 4:
 						return 1-0.4;
-						break;
 					case 5:
 						return 1-0.8;
-						break;
 				}
-
 			break;
+
 			case 4:
 				switch(y)
 				{
 					default:
 						return 0;
-						break;
 					case 5:
 						return 1-0.8;
-						break;
 				}
-
 			break;
+
 			default:
 				return 666;
 				break;
-
 		}
 	}
 };

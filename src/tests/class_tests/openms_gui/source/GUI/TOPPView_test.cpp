@@ -68,7 +68,7 @@ class TestTOPPView: public QObject
 	*/
 	struct ScheduleInfo
 	{
-		ScheduleInfo():delay(0){};
+		ScheduleInfo():delay(0){}
 		ScheduleInfo(QString p_keys, QString p_title, int p_delay)
 			:keys(p_keys),
 			 title(p_title),

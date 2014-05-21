@@ -1248,8 +1248,6 @@ namespace OpenMS
       case TOPPASVertex::TV_UNFINISHED:
         return; // still processing
 
-        break;
-
       case TOPPASVertex::TV_ALLFINISHED:
         break; // ok, go to bottom
 

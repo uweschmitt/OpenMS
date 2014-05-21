@@ -76,8 +76,6 @@ namespace OpenMS
       return false;
       // we could also exit() here... but no for now
     }
-
-    return false; // never reached, so return value does not matter
   }
 
   bool QApplicationTOPP::event(QEvent* event)

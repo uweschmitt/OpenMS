@@ -55,18 +55,18 @@ class Test: public SampleTreatment
     SampleTreatment("Test")
     {
 
-    };
+    }
 
     Test(const Test& source):
     SampleTreatment(source)
     {
 
-    };
+    }
 
     virtual ~Test()
     {
 
-    };
+    }
 
     Test& operator = (const Test& source)
     {
@@ -75,13 +75,13 @@ class Test: public SampleTreatment
         SampleTreatment::operator=(source);
       }
       return *this;
-    };
+    }
 
 
     virtual SampleTreatment* clone() const
     {
       return new Test(*this);
-    };
+    }
 
     virtual bool operator== (const SampleTreatment& rhs) const
     {
@@ -91,7 +91,7 @@ class Test: public SampleTreatment
       return
         SampleTreatment::operator==(*tmp)
         ;
-    };
+    }
 };
 
 
