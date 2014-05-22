@@ -355,6 +355,7 @@ namespace OpenMS
 
     return 0;
   }
+
   // compute Jacobian matrix for the different parameters
   int TwoDOptimization::TwoDOptFunctor::df(const Eigen::VectorXd &x, Eigen::MatrixXd &J)
   {
@@ -365,8 +366,6 @@ namespace OpenMS
     //          - each row corresponds to one data point
     //          - each column corresponds to one parameter
 
-    double current_position, last_position, step;
-    double p_height, p_position, p_width;
     double diff, denom_inv, ddl_left, ddl_right, ddx0, sinh_term;
     Int count = 0;
     Int counter_posf = 0;
@@ -386,6 +385,8 @@ namespace OpenMS
     //iterate over all scans
     for (Size current_scan = 0; current_scan < num_scans; ++current_scan)
     {
+      double p_height, p_position, p_width;
+      double current_position, last_position, step;
       Size curr_scan_idx = current_scan + iso_map_iter->second.peaks.begin()->first;
       current_position = ((raw_data_first
                            + signal2D[2 * current_scan].first)->begin()
