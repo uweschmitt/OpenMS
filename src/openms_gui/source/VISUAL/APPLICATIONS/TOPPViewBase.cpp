@@ -2657,9 +2657,9 @@ namespace OpenMS
     {
       for (Param::ParamIterator it = p.begin(); it != p.end(); ++it)
       {
-        QString filename = it->value.toQString();
-        if (File::exists(filename))
-          recent_files_.append(filename);
+        QString tmpfilename = it->value.toQString();
+        if (File::exists(tmpfilename))
+          recent_files_.append(tmpfilename);
       }
     }
 
@@ -3988,10 +3988,10 @@ namespace OpenMS
       // update all layers that need an update
       for (Size i = 0; i != needs_update.size(); ++i)
       {
-        pair<const SpectrumWidget*, Size>& slp = needs_update[i];
-        const SpectrumWidget* sw = slp.first;
-        Size layer_index = slp.second;
-        sw->canvas()->updateLayer(layer_index);
+        pair<const SpectrumWidget*, Size>& tmp_slp = needs_update[i];
+        const SpectrumWidget* tmp_sw = tmp_slp.first;
+        Size tmp_layer_index = tmp_slp.second;
+        tmp_sw->canvas()->updateLayer(tmp_layer_index);
       }
     }
     /*

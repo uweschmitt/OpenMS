@@ -305,17 +305,21 @@ namespace OpenMS
       arg_param_.clear();
       return;
     }
+
     //set tool combo
-    Param::ParamIterator iter = arg_param_.begin();
     String str;
     string = iter.getName().substr(0, iter.getName().find(":")).c_str();
     Int pos = tools_combo_->findText(string);
-    if (pos == -1)
     {
-      QMessageBox::critical(this, "Error", (String("Cannot apply '") + string + "' tool to this layer type. Aborting!").c_str());
-      arg_param_.clear();
-      return;
+      Param::ParamIterator iter = arg_param_.begin(); // local iter
+      if (pos == -1)
+      {
+        QMessageBox::critical(this, "Error", (String("Cannot apply '") + string + "' tool to this layer type. Aborting!").c_str());
+        arg_param_.clear();
+        return;
+      }
     }
+
     tools_combo_->setCurrentIndex(pos);
     //Extract the required parameters
     vis_param_ = arg_param_.copy(getTool() + ":1:", true);

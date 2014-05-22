@@ -708,83 +708,85 @@ namespace OpenMS
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     // Sample the model ...
-    SimCoordinateType rt(0);
     MSSimExperiment::iterator exp_iter = exp_start;
-    MSSimExperiment::iterator exp_ct_iter = exp_ct_start;
-    for (; rt < rt_end && exp_iter != experiment.end(); ++exp_iter, ++exp_ct_iter)
     {
-      rt = exp_iter->getRT();
-      double distortion = double(exp_iter->getMetaValue("distortion"));
-      double rt_intensity = ((EGHModel*)pm.getModel(0))->getIntensity(rt);
-
-      // centroided GT
-      Size iso_pos(0);
-      SimPointType point;
-      for (IsotopeDistribution::const_iterator iter = iso_dist.begin(); iter != iso_dist.end(); ++iter, ++iso_pos)
+      SimCoordinateType rt(0); // local rt variable
+      MSSimExperiment::iterator exp_ct_iter = exp_ct_start;
+      for (; rt < rt_end && exp_iter != experiment.end(); ++exp_iter, ++exp_ct_iter)
       {
-        point.setMZ(mz_mono + (iso_pos * iso_peakdist / q));
-        point.setIntensity(iter->second * rt_intensity * distortion);
+        rt = exp_iter->getRT();
+        double distortion = double(exp_iter->getMetaValue("distortion"));
+        double rt_intensity = ((EGHModel*)pm.getModel(0))->getIntensity(rt);
 
-        if (point.getIntensity() <= 0.0)
-          continue;
-
-        exp_ct_iter->push_back(point);
-      }
-
-      // RAW signal (sample it on the grid)
-      std::vector<SimCoordinateType>::const_iterator it_grid = lower_bound(grid_.begin(), grid_.end(), mz_start);
-      for (; it_grid != grid_.end() && (*it_grid) < mz_end; ++it_grid)
-      {
-        ProductModel<2>::IntensityType intensity = pm.getIntensity(DPosition<2>(rt, *it_grid)) * distortion;
-        if (intensity <= 0.0)
-          continue; // intensity cutoff (below that we don't want to see a signal)
-
-        point.setMZ(*it_grid);
-        point.setIntensity(intensity);
-
-        //LOG_ERROR << "Sampling " << rt << " , " << mz << " -> " << point.getIntensity() << std::endl;
-
-        // add Gaussian distributed m/z error
-#ifdef _OPENMP
-        int CURRENT_THREAD = omp_get_thread_num();
-        // check if we need to refill the random number pool for this thread
-        if (threaded_random_numbers_index_[CURRENT_THREAD] == THREADED_RANDOM_NUMBER_POOL_SIZE_)
+        // centroided GT
+        Size iso_pos(0);
+        SimPointType point;
+        for (IsotopeDistribution::const_iterator iter = iso_dist.begin(); iter != iso_dist.end(); ++iter, ++iso_pos)
         {
-          if (mz_error_stddev_ != 0.0)
-          {
-#pragma omp critical(generate_random_number_for_thread)
-            {
-              boost::uniform_real<double> udist (mz_error_mean_, mz_error_stddev_);
-              for (Size i = 0; i < THREADED_RANDOM_NUMBER_POOL_SIZE_; ++i)
-              {
-                threaded_random_numbers_[CURRENT_THREAD][i] = udist(rnd_gen_->getTechnicalRng());
-              }
-            }
-          }
-          else
-          {
-            // we do not need to care about concurrency here
-            fill(threaded_random_numbers_[CURRENT_THREAD].begin(), threaded_random_numbers_[CURRENT_THREAD].end(), mz_error_mean_);
-          }
-          // reset index for this thread to first position
-          threaded_random_numbers_index_[CURRENT_THREAD] = 0;
+          point.setMZ(mz_mono + (iso_pos * iso_peakdist / q));
+          point.setIntensity(iter->second * rt_intensity * distortion);
+
+          if (point.getIntensity() <= 0.0)
+            continue;
+
+          exp_ct_iter->push_back(point);
         }
 
-        const double mz_err = threaded_random_numbers_[CURRENT_THREAD][threaded_random_numbers_index_[CURRENT_THREAD]++];
-#else
-        // we can use the normal Gaussian ran-gen if we do not use OPENMP
-        boost::uniform_real<double> udist (mz_error_mean_, mz_error_stddev_);
-        const double mz_err = udist(rnd_gen_->getTechnicalRng());
-#endif
-        point.setMZ(std::fabs(point.getMZ() + mz_err));
-        exp_iter->push_back(point);
+        // RAW signal (sample it on the grid)
+        std::vector<SimCoordinateType>::const_iterator it_grid = lower_bound(grid_.begin(), grid_.end(), mz_start);
+        for (; it_grid != grid_.end() && (*it_grid) < mz_end; ++it_grid)
+        {
+          ProductModel<2>::IntensityType intensity = pm.getIntensity(DPosition<2>(rt, *it_grid)) * distortion;
+          if (intensity <= 0.0)
+            continue; // intensity cutoff (below that we don't want to see a signal)
 
-        intensity_sum += point.getIntensity();
-      }
-      //update last scan affected
-#ifdef OPENMS_ASSERTIONS
-      end_scan = exp_iter - experiment.begin();
+          point.setMZ(*it_grid);
+          point.setIntensity(intensity);
+
+          //LOG_ERROR << "Sampling " << rt << " , " << mz << " -> " << point.getIntensity() << std::endl;
+
+          // add Gaussian distributed m/z error
+#ifdef _OPENMP
+          int CURRENT_THREAD = omp_get_thread_num();
+          // check if we need to refill the random number pool for this thread
+          if (threaded_random_numbers_index_[CURRENT_THREAD] == THREADED_RANDOM_NUMBER_POOL_SIZE_)
+          {
+            if (mz_error_stddev_ != 0.0)
+            {
+#pragma omp critical(generate_random_number_for_thread)
+              {
+                boost::uniform_real<double> udist (mz_error_mean_, mz_error_stddev_);
+                for (Size i = 0; i < THREADED_RANDOM_NUMBER_POOL_SIZE_; ++i)
+                {
+                  threaded_random_numbers_[CURRENT_THREAD][i] = udist(rnd_gen_->getTechnicalRng());
+                }
+              }
+            }
+            else
+            {
+              // we do not need to care about concurrency here
+              fill(threaded_random_numbers_[CURRENT_THREAD].begin(), threaded_random_numbers_[CURRENT_THREAD].end(), mz_error_mean_);
+            }
+            // reset index for this thread to first position
+            threaded_random_numbers_index_[CURRENT_THREAD] = 0;
+          }
+
+          const double mz_err = threaded_random_numbers_[CURRENT_THREAD][threaded_random_numbers_index_[CURRENT_THREAD]++];
+#else
+          // we can use the normal Gaussian ran-gen if we do not use OPENMP
+          boost::uniform_real<double> udist (mz_error_mean_, mz_error_stddev_);
+          const double mz_err = udist(rnd_gen_->getTechnicalRng());
 #endif
+          point.setMZ(std::fabs(point.getMZ() + mz_err));
+          exp_iter->push_back(point);
+
+          intensity_sum += point.getIntensity();
+        }
+        //update last scan affected
+#ifdef OPENMS_ASSERTIONS
+        end_scan = exp_iter - experiment.begin();
+#endif
+      }
     }
 
     OPENMS_POSTCONDITION(end_scan != std::numeric_limits<Int>::min(), "RawMSSignalSimulation::samplePeptideModel2D_(): setting RT bounds failed!");

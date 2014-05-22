@@ -136,14 +136,16 @@ namespace OpenMS
 
     // compute the average mass (-offset)
     CoordinateType isotopes_mean = 0;
-    Int i = 0;
-    for (IsotopeDistribution::iterator iter = isotope_distribution_.begin();
-         iter != isotope_distribution_.end(); ++iter, ++i)
     {
-      isotopes_exact.push_back(iter->second);
-      isotopes_mean += iter->second * i;
+      Int i = 0; // local i
+      for (IsotopeDistribution::iterator iter = isotope_distribution_.begin();
+           iter != isotope_distribution_.end(); ++iter, ++i)
+      {
+        isotopes_exact.push_back(iter->second);
+        isotopes_mean += iter->second * i;
+      }
+      isotopes_mean *= isotope_distance_ / charge_;
     }
-    isotopes_mean *= isotope_distance_ / charge_;
     // (Need not divide by sum of probabilities, which is 1.)
 
     ///

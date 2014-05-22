@@ -99,9 +99,11 @@ namespace OpenMS
       std::vector< MzIntPair >::const_iterator iter;
       for(iter = values.begin(); iter != values.end(); ++iter)
       {
-        double mz = iter->first;
-        if(mz > std::numeric_limits<double>::epsilon())//null-point
+        double local_mz = iter->first;
+        if (local_mz > std::numeric_limits<double>::epsilon()) //null-point
+        {
           ++true_data_points;
+        }
       }
       //abort if we have less than 4 data points for spline fitting
       if(true_data_points < 4)

@@ -201,8 +201,8 @@ namespace OpenMS
       }
       for (Size peak = 0; peak < tmp_spec.size(); ++peak)
       {
-        Peak1D p = tmp_spec[peak];
-        precomputed_MS2[i_f].push_back(p);
+        Peak1D local_peak = tmp_spec[peak];
+        precomputed_MS2[i_f].push_back(local_peak);
       }
 
       precomputed_MS2[i_f].setMSLevel(2);

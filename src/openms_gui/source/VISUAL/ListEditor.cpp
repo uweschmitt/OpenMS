@@ -118,12 +118,12 @@ namespace OpenMS
         }
         else if (qobject_cast<QComboBox *>(editor))
         {
-          int index = static_cast<QComboBox *>(editor)->findText(str);
-          if (index == -1)
+          int tmp_index = static_cast<QComboBox *>(editor)->findText(str);
+          if (tmp_index == -1)
           {
-            index = 0;
+            tmp_index = 0;
           }
-          static_cast<QComboBox *>(editor)->setCurrentIndex(index);
+          static_cast<QComboBox *>(editor)->setCurrentIndex(tmp_index);
         }
         else if (qobject_cast<QLineEdit *>(editor))
         {

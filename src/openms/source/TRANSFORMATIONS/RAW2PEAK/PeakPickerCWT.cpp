@@ -1599,15 +1599,17 @@ namespace OpenMS
       }
 
       //reserve space in the output container
-      Size number_of_peaks = peak_shapes.size() - peaks_to_skip.size();
-      output.reserve(number_of_peaks);
-      output.getFloatDataArrays()[0].reserve(number_of_peaks);
-      output.getFloatDataArrays()[1].reserve(number_of_peaks);
-      output.getFloatDataArrays()[2].reserve(number_of_peaks);
-      output.getFloatDataArrays()[3].reserve(number_of_peaks);
-      output.getFloatDataArrays()[4].reserve(number_of_peaks);
-      output.getFloatDataArrays()[5].reserve(number_of_peaks);
-      output.getFloatDataArrays()[6].reserve(number_of_peaks);
+      {
+        Size number_of_peaks = peak_shapes.size() - peaks_to_skip.size(); // local variable
+        output.reserve(number_of_peaks);
+        output.getFloatDataArrays()[0].reserve(number_of_peaks);
+        output.getFloatDataArrays()[1].reserve(number_of_peaks);
+        output.getFloatDataArrays()[2].reserve(number_of_peaks);
+        output.getFloatDataArrays()[3].reserve(number_of_peaks);
+        output.getFloatDataArrays()[4].reserve(number_of_peaks);
+        output.getFloatDataArrays()[5].reserve(number_of_peaks);
+        output.getFloatDataArrays()[6].reserve(number_of_peaks);
+      }
 
       // write the picked peaks to the output container
       for (Size i = 0; i < peak_shapes.size(); ++i)
