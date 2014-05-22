@@ -540,9 +540,9 @@ namespace OpenMS
       {
         peptide = MRMDecoy::shufflePeptide(peptide, identity_threshold, -1, max_attempts);
       }
-      for (Size i = 0; i < peptide.protein_refs.size(); i++)
+      for (Size j = 0; j < peptide.protein_refs.size(); j++)
       {
-        peptide.protein_refs[i] = decoy_tag + peptide.protein_refs[i];
+        peptide.protein_refs[j] = decoy_tag + peptide.protein_refs[j];
       }
 
       if (MRMDecoy::AASequenceIdentity(original_sequence, peptide.sequence) > identity_threshold)

@@ -472,9 +472,9 @@ void  RNPxlModificationsGenerator::generateTargetSequences(const String& res_seq
 
   // check and add only valid sequences (containing only target nucleotides or nucleotides that are both source and target nucleotides)
   Size count = 0;
-  for (Size pos = 0; pos != res_seq.size(); ++pos)
+  for (Size lpos = 0; lpos != res_seq.size(); ++lpos)
   {
-    TConstMapIterator target_iterator = map_source2target.find(res_seq[pos]);
+    TConstMapIterator target_iterator = map_source2target.find(res_seq[lpos]);
     if (target_iterator == map_source2target.end()) // no pure source nucleotide?
     {
       count++;
@@ -484,7 +484,7 @@ void  RNPxlModificationsGenerator::generateTargetSequences(const String& res_seq
       const vector<char>& targets = target_iterator->second;
       for (Size i = 0; i != targets.size(); ++i)
       {
-        if (res_seq[pos] == targets[i])
+        if (res_seq[lpos] == targets[i])
         {
           count++;
         }

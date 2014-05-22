@@ -758,8 +758,8 @@ namespace OpenMS
           if (i != fixed_site)
           {
             Int r_ij(abs((Int)i - (Int)(fixed_site)));
-            double prob = exp(-(-gb_i - gb_j + COULOMB_REPULSION / r_ij) * 1000 / (Constants::R * T) -500) / q;
-            bb_charge_[i] += prob;
+            double this_prob = exp(-(-gb_i - gb_j + COULOMB_REPULSION / r_ij) * 1000 / (Constants::R * T) -500) / q;
+            bb_charge_[i] += this_prob;
 
             double add_E = exp(gb_i * 1000 / Constants::R / T);
             if (i < fixed_site - 1)
@@ -821,17 +821,17 @@ namespace OpenMS
         {
           // fixed site at side chain
           Int r_ij = abs((Int)i - (Int)fixed_site);
-          double prob = exp(-(-gb_i - gb_j + COULOMB_REPULSION / (r_ij + 1)) * 1000 / (Constants::R * T) -500) / q;
-          bb_charge_[i] += prob;
+          double this_prob = exp(-(-gb_i - gb_j + COULOMB_REPULSION / (r_ij + 1)) * 1000 / (Constants::R * T) -500) / q;
+          bb_charge_[i] += this_prob;
 
-          double add_E = exp(gb_i * 1000 / Constants::R / T);
+          double this_add_E = exp(gb_i * 1000 / Constants::R / T);
           if (i <= fixed_site)
           {
-            sum_E_n_term += add_E;
+            sum_E_n_term += this_add_E;
           }
           else
           {
-            sum_E_c_term += add_E;
+            sum_E_c_term += this_add_E;
           }
 
           if (i != fixed_site && i != peptide.size())

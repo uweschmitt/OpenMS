@@ -81,10 +81,10 @@ namespace OpenMS
     if (id.getHits().size() > 2)
     {
       vector<double> scores;
-      vector<PeptideHit>::const_iterator it = id.getHits().begin();
-      for (++it; it != id.getHits().end(); ++it)
+      vector<PeptideHit>::const_iterator lit = id.getHits().begin();
+      for (++lit; lit != id.getHits().end(); ++lit)
       {
-        scores.push_back(it->getScore());
+        scores.push_back(lit->getScore());
       }
 
       double slope(0);
@@ -154,10 +154,10 @@ namespace OpenMS
     if (id.getHits().size() > 2 && use_local_scoring)
     {
       vector<double> scores;
-      vector<PeptideHit>::const_iterator it = id.getHits().begin();
-      for (++it; it != id.getHits().end(); ++it)
+      vector<PeptideHit>::const_iterator lit = id.getHits().begin();
+      for (++lit; lit != id.getHits().end(); ++lit)
       {
-        scores.push_back(it->getScore());
+        scores.push_back(lit->getScore());
       }
 
       double slope(0);
