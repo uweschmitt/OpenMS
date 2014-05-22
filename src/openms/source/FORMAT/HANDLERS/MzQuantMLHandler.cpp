@@ -741,7 +741,7 @@ namespace OpenMS
 
       //---AnalysisSummary---
       os << "\t<AnalysisSummary>\n";
-      cmsq_->getAnalysisSummary().quant_type_;
+      // cmsq_->getAnalysisSummary().quant_type_;
       //~ os << "\t\t<userParam name=\"QuantType\" value=\"";
       //~ os << String(MSQuantifications::NamesOfQuantTypes[cmsq_->getAnalysisSummary().quant_type_]);
       switch (cmsq_->getAnalysisSummary().quant_type_)

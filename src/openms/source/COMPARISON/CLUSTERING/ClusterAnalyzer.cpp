@@ -95,24 +95,25 @@ namespace OpenMS
       }
     }
 
-
     //inital values for interdis_i and cluster_with_interdist
-    std::set<Size>::iterator it = leafs.begin();
-    ++it;
-    for (; it != leafs.end(); ++it)
     {
-      std::set<Size>::iterator jt = leafs.begin();
-      for (; *jt < *it; ++jt)
+      std::set<Size>::iterator it = leafs.begin();
+      ++it;
+      for (; it != leafs.end(); ++it)
       {
-        if (original.getValue(*it, *jt) < interdist_i[*it])
+        std::set<Size>::iterator jt = leafs.begin();
+        for (; *jt < *it; ++jt)
         {
-          interdist_i[*it] = original.getValue(*it, *jt);
-          cluster_with_interdist[*it] = *jt;
-        }
-        if (original.getValue(*it, *jt) < interdist_i[*jt])
-        {
-          interdist_i[*jt] = original.getValue(*it, *jt);
-          cluster_with_interdist[*jt] = *it;
+          if (original.getValue(*it, *jt) < interdist_i[*it])
+          {
+            interdist_i[*it] = original.getValue(*it, *jt);
+            cluster_with_interdist[*it] = *jt;
+          }
+          if (original.getValue(*it, *jt) < interdist_i[*jt])
+          {
+            interdist_i[*jt] = original.getValue(*it, *jt);
+            cluster_with_interdist[*jt] = *it;
+          }
         }
       }
     }

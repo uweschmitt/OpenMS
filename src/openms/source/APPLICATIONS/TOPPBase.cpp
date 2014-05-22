@@ -592,21 +592,27 @@ namespace OpenMS
     for (vector<ParameterInformation>::const_iterator it = parameters_.begin(); it != parameters_.end(); ++it)
     {
       if (!((!it->advanced) || (it->advanced && verbose)))
+      {
         continue;
+      }
 
       //new subsection?
       String subsection = getSubsection_(it->name);
       if (!subsection.empty() && current_TOPP_subsection != subsection)
       {
         current_TOPP_subsection = subsection;
-        map<String, String>::const_iterator it = subsections_TOPP_.find(current_TOPP_subsection);
-        if (it == subsections_TOPP_.end())
+        map<String, String>::const_iterator it2 = subsections_TOPP_.find(current_TOPP_subsection);
+        if (it2 == subsections_TOPP_.end())
+        {
           throw ElementNotFound(__FILE__, __LINE__, __PRETTY_FUNCTION__, "'" + current_TOPP_subsection + "' (TOPP subsection not registered)");
+        }
         cerr << "\n"; // print newline for new subsection
 
-        String subsection_description = it->second;
+        String subsection_description = it2->second;
         if (subsection_description.length() == 0)
+        {
           subsection_description = current_TOPP_subsection;
+        }
 
         cerr << ConsoleUtils::breakString(subsection_description, 0, 10) << ":\n"; // print subsection description
       }
@@ -644,10 +650,10 @@ namespace OpenMS
       case ParameterInformation::INTLIST:
       case ParameterInformation::DOUBLELIST:
       {
-        String tmp = it->default_value.toString().substitute(", ", " ");
-        if (tmp != "" && tmp != "[]")
+        String tmp2 = it->default_value.toString().substitute(", ", " ");
+        if (tmp2 != "" && tmp2 != "[]")
         {
-          addons.push_back(String("default: '") + tmp + "'");
+          addons.push_back(String("default: '") + tmp2 + "'");
         }
       }
       break;

@@ -237,10 +237,10 @@ namespace OpenMS
     if (count < number)
     {
       f.setRT(rt + 0.1);
-      FeatureMap<>::Iterator iter = lower_bound(features.begin(), features.end(), f, Feature::RTLess()); // took this comparator on purpose!
-      if (iter != features.end())
+      FeatureMap<>::Iterator l_iter = lower_bound(features.begin(), features.end(), f, Feature::RTLess()); // took this comparator on purpose!
+      if (l_iter != features.end())
       {
-        rt = iter->getRT();
+        rt = l_iter->getRT();
         getNextPrecursorsSeq(features, next_features, number - count, rt);
       }
     }
