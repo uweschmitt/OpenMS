@@ -452,16 +452,16 @@ namespace OpenMS
           {
             for (Size j = 0; j != pi[pi_index].getHits().size(); ++j)
             {
-              PeptideHit ph = pi[pi_index].getHits()[j];
+              PeptideHit peptide_hit = pi[pi_index].getHits()[j];
 
 #ifdef DEBUG_IDENTIFICATION_VIEW
-              cout << "    " << i << " "  << pi_index << " " << j << " " << ph.getScore() << " " << ph.getSequence().toString() << endl;
+              cout << "    " << i << " "  << pi_index << " " << j << " " << peptide_hit.getScore() << " " << peptide_hit.getSequence().toString() << endl;
 #endif
               // better score?
-              if ((ph.getScore() < best_score && !is_higher_score_better)
-                 || (ph.getScore() > best_score && is_higher_score_better))
+              if ((peptide_hit.getScore() < best_score && !is_higher_score_better)
+                 || (peptide_hit.getScore() > best_score && is_higher_score_better))
               {
-                best_score = ph.getScore();
+                best_score = peptide_hit.getScore();
                 best_j_index = j;
                 best_pi_index = pi_index;
               }

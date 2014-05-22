@@ -1700,7 +1700,7 @@ namespace OpenMS
     //determine coordinates;
     double mz = 0.0;
     double rt = 0.0;
-    float it = 0.0;
+    float intensity = 0.0;
     Int charge = 0;
     double quality = 0.0;
     Size size = 0;
@@ -1715,7 +1715,7 @@ namespace OpenMS
       f = &peak.getFeature(*getCurrentLayer().getFeatureMap());
       mz = f->getMZ();
       rt = f->getRT();
-      it = f->getIntensity();
+      intensity = f->getIntensity();
       charge  = f->getCharge();
       quality = f->getOverallQuality();
     }
@@ -1727,7 +1727,7 @@ namespace OpenMS
       const MSSpectrum<> & s = peak.getSpectrum(*getCurrentLayer().getPeakData());
       mz = p.getMZ();
       rt = s.getRT();
-      it = p.getIntensity();
+      intensity = p.getIntensity();
     }
     break;
 
@@ -1737,7 +1737,7 @@ namespace OpenMS
 
       mz = cf->getMZ();
       rt = cf->getRT();
-      it = cf->getIntensity();
+      intensity = cf->getIntensity();
       charge  = cf->getCharge();
       quality = cf->getQuality();
       sub_features = cf->getFeatures();
@@ -1772,7 +1772,7 @@ namespace OpenMS
     QStringList lines;
     lines.push_back("RT: " + QString::number(rt, 'f', 2));
     lines.push_back("m/z: " + QString::number(mz, 'f', 2));
-    lines.push_back("Int: " + QString::number(it, 'f', 2));
+    lines.push_back("Int: " + QString::number(intensity, 'f', 2));
 
     if (getCurrentLayer().type == LayerData::DT_FEATURE || getCurrentLayer().type == LayerData::DT_CONSENSUS)
     {
@@ -1799,12 +1799,12 @@ namespace OpenMS
     if (getCurrentLayer().type == LayerData::DT_CONSENSUS)
     {
       lines.push_back("Size: " + QString::number(size));
-      for (ConsensusFeature::HandleSetType::const_iterator it = sub_features.begin(); it != sub_features.end(); ++it)
+      for (ConsensusFeature::HandleSetType::const_iterator iterator = sub_features.begin(); iterator != sub_features.end(); ++iterator)
       {
-        lines.push_back("Feature m/z:" + QString::number(it->getMZ(), 'f', 2) +
-                        "  rt:" + QString::number(it->getRT(), 'f', 2) +
-                        "   q:" + QString::number(it->getCharge(), 'f', 2) +
-                        "  intensity:" + QString::number(it->getIntensity(), 'f', 2));
+        lines.push_back("Feature m/z:" + QString::number(iterator->getMZ(), 'f', 2) +
+                        "  rt:" + QString::number(iterator->getRT(), 'f', 2) +
+                        "   q:" + QString::number(iterator->getCharge(), 'f', 2) +
+                        "  intensity:" + QString::number(iterator->getIntensity(), 'f', 2));
       }
     }
 
@@ -2130,7 +2130,6 @@ namespace OpenMS
       return;
     }
 
-    double mz = widgetToData_(e->pos())[0];
     double rt = widgetToData_(e->pos())[1];
 
     const LayerData & layer = getCurrentLayer();
@@ -2389,6 +2388,8 @@ namespace OpenMS
     //------------------CHROMATOGRAMS----------------------------------
     else if (layer.type == LayerData::DT_CHROMATOGRAM)
     {
+      double mz = widgetToData_(e->pos())[0];
+
       settings_menu->addSeparator();
       settings_menu->addAction("Show/hide projections");
       settings_menu->addAction("Show/hide MS/MS precursors");

@@ -806,10 +806,10 @@ namespace OpenMS
         // draw a legend
         if (param_.getValue("show_legend").toBool())
         {
-          SpectrumType & spectrum = getLayer_(i).getCurrentSpectrum();
+          SpectrumType & curr_spectrum = getLayer_(i).getCurrentSpectrum();
           double xpos = getVisibleArea().maxX() - (getVisibleArea().maxX() - getVisibleArea().minX()) * 0.1;
-          SpectrumConstIteratorType tmp  = max_element(spectrum.MZBegin(visible_area_.minX()), spectrum.MZEnd(xpos), PeakType::IntensityLess());
-          if (tmp != spectrum.end())
+          SpectrumConstIteratorType tmp  = max_element(curr_spectrum.MZBegin(visible_area_.minX()), curr_spectrum.MZEnd(xpos), PeakType::IntensityLess());
+          if (tmp != curr_spectrum.end())
           {
             PointType position(xpos, std::max<double>(tmp->getIntensity() - 100, tmp->getIntensity() * 0.8));
             Annotation1DPeakItem item = Annotation1DPeakItem(position, layer.name.toQString(), QColor(layer.param.getValue("peak_color").toQString()));

@@ -415,19 +415,18 @@ namespace OpenMS
 // MS2 fragment to this MS2 consensus spectrum
   double MS2ConsensusSpectrum::getLCElutionPeakSimilarity(MS2Fragment * frag)
   {
-
-    double startTR = frag->getStartTR();
-    if (startTR > getStartTR())
+    double start_tr = frag->getStartTR();
+    if (start_tr > getStartTR())
     {
-      startTR = getStartTR();
+      start_tr = getStartTR();
     }
 
-    double totLCSpec = getEndTR() - startTR;
-    double startLCSpec = getTR() - startTR;
+    double totLCSpec = getEndTR() - start_tr;
+    double startLCSpec = getTR() - start_tr;
     double corSpec = startLCSpec / totLCSpec;
 
-    double totLCMS2 = frag->getEndTR() - startTR;
-    double startLCMS2 = frag->getTR() - startTR;
+    double totLCMS2 = frag->getEndTR() - start_tr;
+    double startLCMS2 = frag->getTR() - start_tr;
     double corMS2 = startLCMS2 / totLCMS2;
 
     ///////////

@@ -843,8 +843,8 @@ namespace OpenMS
           return;
         }
         // reload updated file
-        ParamXMLFile paramFile;
-        paramFile.load(file, load_param);
+        ParamXMLFile tmp_paramFile; // TODO do we need a new param file here?
+        tmp_paramFile.load(file, load_param);
       }
     }
     else if (v_file > v_this_high)
@@ -989,9 +989,9 @@ namespace OpenMS
     //load all edges
     for (Param::ParamIterator it = edges_param.begin(); it != edges_param.end(); ++it)
     {
-      const String& edge = (it->value).toString();
+      const String& str_edge = (it->value).toString();
       StringList edge_substrings;
-      edge.split('/', edge_substrings);
+      str_edge.split('/', edge_substrings);
       if (edge_substrings.size() != 2)
       {
         std::cerr << "Invalid edge format" << std::endl;

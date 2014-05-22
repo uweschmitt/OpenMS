@@ -422,15 +422,15 @@ namespace OpenMS
     }
 
     // set the apex ms peak:
-    MSPeak * APEX = find_true_peak((float) apexScan);
-    if (!APEX->getExtraPeakInfo().empty())
+    MSPeak * temp_APEX = find_true_peak((float) apexScan);
+    if (!temp_APEX->getExtraPeakInfo().empty())
     {
-      setElutionPeakExtraInfo(APEX->getExtraPeakInfo());
+      setElutionPeakExtraInfo(temp_APEX->getExtraPeakInfo());
     }
 
     // find retention time and intensity of apex:
-    fScanNumberApex = APEX->get_scan_number();
-    fapex_intensity = APEX->get_intensity();
+    fScanNumberApex = temp_APEX->get_scan_number();
+    fapex_intensity = temp_APEX->get_intensity();
 
   }
 

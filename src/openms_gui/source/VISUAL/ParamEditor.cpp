@@ -163,12 +163,12 @@ namespace OpenMS
       {
         if (qobject_cast<QComboBox *>(editor))       //Drop-down list for enums
         {
-          int index = static_cast<QComboBox *>(editor)->findText(str);
-          if (index == -1)
+          int tmp_index = static_cast<QComboBox *>(editor)->findText(str);
+          if (tmp_index == -1)
           {
-            index = 0;
+            tmp_index = 0;
           }
-          static_cast<QComboBox *>(editor)->setCurrentIndex(index);
+          static_cast<QComboBox *>(editor)->setCurrentIndex(tmp_index);
         }
         else if (qobject_cast<QLineEdit *>(editor))      // LineEdit for other values
         {
@@ -337,9 +337,9 @@ namespace OpenMS
       {
         stringstream ss;
         ss << list;
-        QVariant new_value;
-        new_value = QVariant(QString::fromStdString(ss.str()));
-        model->setData(index, new_value);
+        QVariant local_new_value;
+        local_new_value = QVariant(QString::fromStdString(ss.str()));
+        model->setData(index, local_new_value);
         model->setData(index, QBrush(Qt::yellow), Qt::BackgroundRole);
         emit modified(true);
       }

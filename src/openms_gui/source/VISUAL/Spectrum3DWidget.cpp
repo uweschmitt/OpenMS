@@ -188,8 +188,8 @@ namespace OpenMS
   void Spectrum3DWidget::showGoToDialog()
   {
     Spectrum2DGoToDialog goto_dialog(this);
-    const DRange<3> & area = canvas()->getDataRange();
-    goto_dialog.setRange(area.minY(), area.maxY(), area.minX(), area.maxX());
+    const DRange<3> & dr_area = canvas()->getDataRange();
+    goto_dialog.setRange(dr_area.minY(), dr_area.maxY(), dr_area.minX(), dr_area.maxX());
     goto_dialog.setMinMaxOfRange(canvas()->getDataRange().minY(), canvas()->getDataRange().maxY(), canvas()->getDataRange().minX(), canvas()->getDataRange().maxX());
     goto_dialog.enableFeatureNumber(false);
     if (goto_dialog.exec())

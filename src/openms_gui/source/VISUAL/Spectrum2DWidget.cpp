@@ -395,8 +395,8 @@ namespace OpenMS
   {
     Spectrum2DGoToDialog goto_dialog(this);
     //set range
-    const DRange<2> & area = canvas()->getVisibleArea();
-    goto_dialog.setRange(area.minY(), area.maxY(), area.minX(), area.maxX());
+    const DRange<2> & tmp_area = canvas()->getVisibleArea();
+    goto_dialog.setRange(tmp_area.minY(), tmp_area.maxY(), tmp_area.minX(), tmp_area.maxX());
     goto_dialog.setMinMaxOfRange(canvas()->getDataRange().minY(), canvas()->getDataRange().maxY(), canvas()->getDataRange().minX(), canvas()->getDataRange().maxX());
     // feature numbers only for consensus&feature maps
     goto_dialog.enableFeatureNumber(canvas()->getCurrentLayer().type == LayerData::DT_FEATURE || canvas()->getCurrentLayer().type == LayerData::DT_CONSENSUS);
