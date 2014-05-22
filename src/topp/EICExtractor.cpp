@@ -150,14 +150,16 @@ struct HeaderInfo
       if (pos_end != std::string::npos)
       {
         String tmp = content.substr(pos, pos_end - pos - 1);
-        if (!tmp.trim().empty()) header_description = tmp;
+        if (!tmp.trim().empty()) 
+        {
+          header_description = tmp;
+        }
         //std::cerr << "Header info is: " << header_description << std::endl;
       }
     }
   }
 
   String header_description;
-  String filename;
 };
 
 

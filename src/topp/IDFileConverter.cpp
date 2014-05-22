@@ -177,7 +177,7 @@ protected:
       const bool ignore_proteins_per_peptide = getFlag_("ignore_proteins_per_peptide");
 
       UInt i = 0;
-      FileHandler fh;
+      // FileHandler fh; // TODO we should be able to remove this
       FileTypes::Type type;
       MSExperiment<Peak1D> msexperiment;
       // Note: we had issues with leading zeroes, so let us represent scan numbers as Int (next line used to be map<String, float> num_and_rt;)  However, now String::toInt() might throw.

@@ -262,7 +262,7 @@ protected:
       }
     }
 
-    vector<Int>::iterator charge = charges.begin(); // charges can be empty, no problem if split_charge is not set
+    vector<Int>::iterator charge_it = charges.begin(); // charges can be empty, no problem if split_charge is not set
     if (split_charge && charges.empty())
     {
       throw Exception::Precondition(__FILE__, __LINE__, __PRETTY_FUNCTION__, "split_charge is set and the list of charge states is empty but should not be!");
@@ -286,7 +286,7 @@ protected:
                 vector<PeptideHit> hits = it->getHits();
                 if (top_hits_only)
                 {
-                  if (!hits.empty() && (!split_charge || hits[0].getCharge() == *charge))
+                  if (!hits.empty() && (!split_charge || hits[0].getCharge() == *charge_it))
                   {
                     double score = getScore_(*engine, hits[0]);
                     if (!boost::math::isnan(score)) // issue #740: ignore scores with 0 values, otherwise you will get the error "unable to fit data"
@@ -311,7 +311,7 @@ protected:
                 {
                   for (std::vector<PeptideHit>::iterator  hit  = hits.begin(); hit < hits.end(); ++hit)
                   {
-                    if (!split_charge || hit->getCharge() == *charge)
+                    if (!split_charge || hit->getCharge() == *charge_it)
                     {
                       double score = getScore_(*engine, *hit);
                       if (!boost::math::isnan(score)) // issue #740: ignore scores with 0 values, otherwise you will get the error "unable to fit data"
@@ -333,7 +333,7 @@ protected:
           tmp.push_back(decoy);
           if (split_charge)
           {
-            String engine_with_charge_state = *engine + String(splitter) + String(*charge);
+            String engine_with_charge_state = *engine + String(splitter) + String(*charge_it);
             all_scores.insert(make_pair(engine_with_charge_state, tmp));
           }
           else
@@ -347,10 +347,10 @@ protected:
         decoy.clear();
       }
 
-      if (split_charge) ++charge;
+      if (split_charge) ++charge_it;
 
     }
-    while (charge < charges.end());
+    while (charge_it < charges.end());
 
     if (all_scores.empty())
     {

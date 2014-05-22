@@ -462,7 +462,7 @@ protected:
     String rt = getStringOption_("rt");
     String mz = getStringOption_("mz");
     String pc_mz = getStringOption_("pc_mz");
-    String it = getStringOption_("int");
+    String str_int = getStringOption_("int");
     IntList levels = getIntList_("peak_options:level");
     IntList maps = getIntList_("consensus:map");
     double sn = getDoubleOption_("peak_options:sn");
@@ -530,7 +530,7 @@ protected:
       //mz precursor
       parseRange_(pc_mz, pc_left, pc_right);
       //int
-      parseRange_(it, it_l, it_u);
+      parseRange_(str_int, it_l, it_u);
       //charge (features only)
       parseRange_(charge, charge_l, charge_u);
       //size (features and consensus features only)
@@ -788,12 +788,12 @@ protected:
       {
         LOG_INFO << "Filtering out MS2 spectra from raw file using consensus features ..." << std::endl;
         IntList il = getIntList_("consensus:blackorwhitelist:maps");
-        set<UInt64> maps(il.begin(), il.end());
+        set<UInt64> tmp_maps(il.begin(), il.end());
         double rt_tol = getDoubleOption_("consensus:blackorwhitelist:rt");
         double mz_tol = getDoubleOption_("consensus:blackorwhitelist:mz");
         bool is_ppm = getStringOption_("consensus:blackorwhitelist:use_ppm_tolerance") == "false" ? false : true;
         bool is_blacklist = getStringOption_("consensus:blackorwhitelist:blacklist") == "true" ? true : false;
-        int ret = filterByBlackOrWhiteList(is_blacklist, exp, consensus_blackorwhitelist, rt_tol, mz_tol, is_ppm, maps);
+        int ret = filterByBlackOrWhiteList(is_blacklist, exp, consensus_blackorwhitelist, rt_tol, mz_tol, is_ppm, tmp_maps);
         if (ret != EXECUTION_OK)
         {
           return (ExitCodes)ret;

@@ -135,15 +135,17 @@ protected:
     StringList file_list = getStringList_("in");
 
     //file type
-    FileHandler fh;
     FileTypes::Type force_type;
-    if (getStringOption_("in_type").size() > 0)
     {
-      force_type = FileTypes::nameToType(getStringOption_("in_type"));
-    }
-    else
-    {
-      force_type = fh.getType(file_list[0]);
+      FileHandler fh;
+      if (getStringOption_("in_type").size() > 0)
+      {
+        force_type = FileTypes::nameToType(getStringOption_("in_type"));
+      }
+      else
+      {
+        force_type = fh.getType(file_list[0]);
+      }
     }
 
     //output file names and types
@@ -272,12 +274,13 @@ protected:
       UInt rt_auto = 0;
       UInt native_id = 0;
       std::vector<MSChromatogram<ChromatogramPeak> > all_chromatograms;
-      for (Size i = 0; i < file_list.size(); ++i)
+      for (Size k = 0; k < file_list.size(); ++k)
       {
-        String filename = file_list[i];
+        String filename = file_list[k];
 
         //load file
         MSExperiment<> in;
+        FileHandler fh;
         fh.loadExperiment(filename, in, force_type, log_type_);
         if (in.empty() && in.getChromatograms().empty())
         {
@@ -302,7 +305,7 @@ protected:
           }
           else if (rt_custom)
           {
-            rt_final = custom_rts[i];
+            rt_final = custom_rts[k];
           }
           else if (rt_filename)
           {
@@ -366,7 +369,7 @@ protected:
           in.getSourceFiles().clear();   // delete source file annotated from source file (its in the spectrum anyways)
         }
         // copy experimental settings from first file
-        if (i == 0)
+        if (k == 0)
         {
           out.ExperimentalSettings::operator=(in);
         }

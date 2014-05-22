@@ -50,7 +50,6 @@
 using namespace OpenMS;
 using namespace std;
 
-
 class LowlevelComparator
 {
 	public:

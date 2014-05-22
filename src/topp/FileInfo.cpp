@@ -571,34 +571,37 @@ protected:
         }
       }
       //determine type (search for the first scan with at least 5 peaks)
-      UInt type = SpectrumSettings::UNKNOWN;
-      UInt i = 0;
-      while (i < exp.size() && exp[i].size() < 5)
       {
-        ++i;
-      }
-      if (i != exp.size())
-      {
-        type = PeakTypeEstimator().estimateType(exp[i].begin(), exp[i].end());
-      }
-      os << "\n"
-         << "Peak type (metadata): " << SpectrumSettings::NamesOfSpectrumType[meta_type] << "\n"
-         << "Peak type (estimated): " << SpectrumSettings::NamesOfSpectrumType[type] << "\n";
-      //if raw data, determine the spacing
-      if (type == SpectrumSettings::RAWDATA)
-      {
-        vector<float> spacing;
-        for (Size j = 1; j < exp[i].size(); ++j)
+        // local variables
+        UInt type = SpectrumSettings::UNKNOWN;
+        UInt exp_idx = 0; 
+        while (exp_idx < exp.size() && exp[exp_idx].size() < 5)
         {
-          spacing.push_back(exp[i][j].getMZ() - exp[i][j - 1].getMZ());
+          ++exp_idx;
         }
-        sort(spacing.begin(), spacing.end());
-        os << "Estimated raw data spacing: " << spacing[spacing.size() / 2] << " (min: " << spacing[0] << ", max: " << spacing.back() << ")" << "\n";
-        os_tsv << "estimated raw data spacing" << "\t" << spacing[spacing.size() / 2] << "\n"
-               << "estimated raw data spacing (min)" << "\t" << spacing[0] << "\n"
-               << "estimated raw data spacing (max)" << "\t" << spacing.back() << "\n";
+        if (exp_idx != exp.size())
+        {
+          type = PeakTypeEstimator().estimateType(exp[exp_idx].begin(), exp[exp_idx].end());
+        }
+        os << "\n"
+           << "Peak type (metadata): " << SpectrumSettings::NamesOfSpectrumType[meta_type] << "\n"
+           << "Peak type (estimated): " << SpectrumSettings::NamesOfSpectrumType[type] << "\n";
+        //if raw data, determine the spacing
+        if (type == SpectrumSettings::RAWDATA)
+        {
+          vector<float> spacing;
+          for (Size j = 1; j < exp[exp_idx].size(); ++j)
+          {
+            spacing.push_back(exp[exp_idx][j].getMZ() - exp[exp_idx][j - 1].getMZ());
+          }
+          sort(spacing.begin(), spacing.end());
+          os << "Estimated raw data spacing: " << spacing[spacing.size() / 2] << " (min: " << spacing[0] << ", max: " << spacing.back() << ")" << "\n";
+          os_tsv << "estimated raw data spacing" << "\t" << spacing[spacing.size() / 2] << "\n"
+                 << "estimated raw data spacing (min)" << "\t" << spacing[0] << "\n"
+                 << "estimated raw data spacing (max)" << "\t" << spacing.back() << "\n";
+        }
+        os << "\n";
       }
-      os << "\n";
 
       //basic info
       exp.updateRanges();
@@ -645,7 +648,7 @@ protected:
       // show meta data array names
       for (MSExperiment<Peak1D>::iterator it = exp.begin(); it != exp.end(); ++it)
       {
-        for (i = 0; i < it->getFloatDataArrays().size(); ++i)
+        for (Size i = 0; i < it->getFloatDataArrays().size(); ++i)
         {
           String name = it->getFloatDataArrays()[i].getName();
           if (meta_names.has(name))
@@ -657,7 +660,7 @@ protected:
             meta_names[name] = 1;
           }
         }
-        for (i = 0; i < it->getIntegerDataArrays().size(); ++i)
+        for (Size i = 0; i < it->getIntegerDataArrays().size(); ++i)
         {
           String name = it->getIntegerDataArrays()[i].getName();
           if (meta_names.has(name))
@@ -669,7 +672,7 @@ protected:
             meta_names[name] = 1;
           }
         }
-        for (i = 0; i < it->getStringDataArrays().size(); ++i)
+        for (Size i = 0; i < it->getStringDataArrays().size(); ++i)
         {
           String name = it->getStringDataArrays()[i].getName();
           if (meta_names.has(name))
@@ -838,9 +841,9 @@ protected:
         }
         //duplicate scans (part 2)
         sort(ms1_rts.begin(), ms1_rts.end());
-        for (Size i = 1; i < ms1_rts.size(); ++i)
+        for (Size j = 1; j < ms1_rts.size(); ++j)
         {
-          if (ms1_rts[i - 1] == ms1_rts[i]) os << "Error: Duplicate spectrum retention time: " << ms1_rts[i] << "\n";
+          if (ms1_rts[j - 1] == ms1_rts[j]) os << "Error: Duplicate spectrum retention time: " << ms1_rts[j] << "\n";
         }
         //check peaks
         for (Size s = 0; s < exp.size(); ++s)
@@ -864,9 +867,9 @@ protected:
           }
           //duplicate m/z (part 2)
           sort(mzs.begin(), mzs.end());
-          for (Size i = 1; i < mzs.size(); ++i)
+          for (Size j = 1; j < mzs.size(); ++j)
           {
-            if (mzs[i - 1] == mzs[i]) os << "Error: Duplicate peak m/z " << mzs[i] << " in spectrum (RT: " << exp[s].getRT() << ")" << "\n";
+            if (mzs[j - 1] == mzs[j]) os << "Error: Duplicate peak m/z " << mzs[j] << " in spectrum (RT: " << exp[s].getRT() << ")" << "\n";
           }
         }
       }

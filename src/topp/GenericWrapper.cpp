@@ -348,8 +348,8 @@ protected:
     Param tool_param = this->getParam_();
 
     // check required parameters (TOPPBase does not do this as we did not use registerInputFile_(...) etc)
-    Param p = tool_param.copy("ETool:", true);
-    for (Param::ParamIterator it = p.begin(); it != p.end(); ++it)
+    Param current_param = tool_param.copy("ETool:", true);
+    for (Param::ParamIterator it = current_param.begin(); it != current_param.end(); ++it)
     {
       if ((it->tags).count("required") > 0)
       {
