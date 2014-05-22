@@ -261,10 +261,13 @@ private:
           it_i -= _ertable[1].size();
         }
       }
-      // fills cache variables for i==1
-      value_type d = Math::gcd(smallestMass, secondMass);
-      _lcms[1] = secondMass * smallestMass / d;
-      _mass_in_lcms[1] = smallestMass / d;
+
+      {
+        // fills cache variables for i==1
+        value_type d = Math::gcd(smallestMass, secondMass);
+        _lcms[1] = secondMass * smallestMass / d;
+        _mass_in_lcms[1] = smallestMass / d;
+      }
 
       // fills remaining table. i is the column index.
       for (size_type i = 2; i < _alphabet.size(); ++i)

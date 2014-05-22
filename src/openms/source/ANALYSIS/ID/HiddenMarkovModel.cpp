@@ -532,27 +532,27 @@ namespace OpenMS
     // add contributions to count_trans_
     for (set<pair<HMMState *, HMMState *> >::const_iterator it = trained_trans_.begin(); it != trained_trans_.end(); ++it)
     {
-      double tmp(0);
-      tmp = num_px * getForwardVariable_(it->first) * getBackwardVariable_(it->second) * getTransitionProbability_(it->first, it->second);
-      tmp += pseudo_counts_;
+      double tmp1(0);
+      tmp1 = num_px * getForwardVariable_(it->first) * getBackwardVariable_(it->second) * getTransitionProbability_(it->first, it->second);
+      tmp1 += pseudo_counts_;
       HMMState * s1 = it->first;
       HMMState * s2 = it->second;
 
       if (synonym_trans_.find(s1) != synonym_trans_.end() && synonym_trans_[s1].find(s2) != synonym_trans_[s1].end())
       {
-        HMMState * tmp = synonym_trans_[s1][s2].first;
+        HMMState * tmp2 = synonym_trans_[s1][s2].first;
         s2 = synonym_trans_[s1][s2].second;
-        s1 = tmp;
+        s1 = tmp2;
       }
 
-      train_count_trans_all_[s1][s2].push_back(tmp);
+      train_count_trans_all_[s1][s2].push_back(tmp1);
       if (count_trans_.find(s1) != count_trans_.end() && count_trans_[s1].find(s2) != count_trans_[s1].end())
       {
-        count_trans_[s1][s2] += tmp;
+        count_trans_[s1][s2] += tmp1;
       }
       else
       {
-        count_trans_[s1][s2] = tmp;
+        count_trans_[s1][s2] = tmp1;
       }
       training_steps_count_[s1][s2]++;
     }
@@ -562,36 +562,36 @@ namespace OpenMS
   {
     forward_.clear();
     set<HMMState *> succ;
-    for (Map<HMMState *, double>::iterator it = init_prob_.begin(); it != init_prob_.end(); ++it)
+    for (Map<HMMState *, double>::iterator it_outer = init_prob_.begin(); it_outer != init_prob_.end(); ++it_outer)
     {
-      //cerr << it->first << " " << it->second << endl;
-      //cerr << it->first->getName() << endl;
-      forward_[it->first] = it->second;
+      //cerr << it_outer->first << " " << it_outer->second << endl;
+      //cerr << it_outer->first->getName() << endl;
+      forward_[it_outer->first] = it_outer->second;
     }
 
-    for (Map<HMMState *, double>::iterator it = init_prob_.begin(); it != init_prob_.end(); ++it)
+    for (Map<HMMState *, double>::iterator it_outer = init_prob_.begin(); it_outer != init_prob_.end(); ++it_outer)
     {
-      succ.insert(it->first->getSuccessorStates().begin(), it->first->getSuccessorStates().end());
+      succ.insert(it_outer->first->getSuccessorStates().begin(), it_outer->first->getSuccessorStates().end());
 
       while (!succ.empty())
       {
         set<HMMState *> succ_new;
-        for (set<HMMState *>::const_iterator it = succ.begin(); it != succ.end(); ++it)
+        for (set<HMMState *>::const_iterator it_inner = succ.begin(); it_inner != succ.end(); ++it_inner)
         {
-          set<HMMState *> pre = (*it)->getPredecessorStates();
+          set<HMMState *> pre = (*it_inner)->getPredecessorStates();
           double sum(0);
           for (set<HMMState *>::const_iterator it2 = pre.begin(); it2 != pre.end(); ++it2)
           {
 #ifdef HIDDEN_MARKOV_MODEL_DEBUG
-            cerr << "\tadding from " << (*it2)->getName() << " " << getForwardVariable_(*it2) << " * " << getTransitionProbability(*it2, *it) << endl;
+            cerr << "\tadding from " << (*it2)->getName() << " " << getForwardVariable_(*it2) << " * " << getTransitionProbability(*it2, *it_inner) << endl;
 #endif
-            sum += getForwardVariable_(*it2) * getTransitionProbability_(*it2, *it);
-            trained_trans_.insert(make_pair(*it2, *it));
+            sum += getForwardVariable_(*it2) * getTransitionProbability_(*it2, *it_inner);
+            trained_trans_.insert(make_pair(*it2, *it_inner));
           }
-          forward_[*it] = sum;
-          succ_new.insert((*it)->getSuccessorStates().begin(), (*it)->getSuccessorStates().end());
+          forward_[*it_inner] = sum;
+          succ_new.insert((*it_inner)->getSuccessorStates().begin(), (*it_inner)->getSuccessorStates().end());
 #ifdef HIDDEN_MARKOV_MODEL_DEBUG
-          cerr << "f: " << (*it)->getName() << "\t" << sum << endl;
+          cerr << "f: " << (*it_inner)->getName() << "\t" << sum << endl;
 #endif
         }
         succ = succ_new;
@@ -603,37 +603,37 @@ namespace OpenMS
   {
     backward_.clear();
     set<HMMState *> pre;
-    for (Map<HMMState *, double>::iterator it = train_emission_prob_.begin(); it != train_emission_prob_.end(); ++it)
+    for (Map<HMMState *, double>::iterator it_outer = train_emission_prob_.begin(); it_outer != train_emission_prob_.end(); ++it_outer)
     {
-      backward_[it->first] = it->second;
+      backward_[it_outer->first] = it_outer->second;
     }
 
-    for (Map<HMMState *, double>::iterator it = train_emission_prob_.begin(); it != train_emission_prob_.end(); ++it)
+    for (Map<HMMState *, double>::iterator it_outer = train_emission_prob_.begin(); it_outer != train_emission_prob_.end(); ++it_outer)
     {
 #ifdef HIDDEN_MARKOV_MODEL_DEBUG
-      cerr << "b:" << it->first << " " <<  it->first->getName() << " " << it->second << endl;
+      cerr << "b:" << it_outer->first << " " <<  it_outer->first->getName() << " " << it_outer->second << endl;
 #endif
-      pre.insert(it->first->getPredecessorStates().begin(), it->first->getPredecessorStates().end());
+      pre.insert(it_outer->first->getPredecessorStates().begin(), it_outer->first->getPredecessorStates().end());
 
       while (!pre.empty())
       {
         set<HMMState *> pre_new;
-        for (set<HMMState *>::const_iterator it = pre.begin(); it != pre.end(); ++it)
+        for (set<HMMState *>::const_iterator it_inner = pre.begin(); it_inner != pre.end(); ++it_inner)
         {
-          set<HMMState *> succ = (*it)->getSuccessorStates();
+          set<HMMState *> succ = (*it_inner)->getSuccessorStates();
           double sum(0);
           for (set<HMMState *>::const_iterator it2 = succ.begin(); it2 != succ.end(); ++it2)
           {
 #ifdef HIDDEN_MARKOV_MODEL_DEBUG
-            cerr << "\tadding from " << (*it2)->getName() << " " << getBackwardVariable_(*it2) << " * " << getTransitionProbability(*it, *it2) << endl;
+            cerr << "\tadding from " << (*it2)->getName() << " " << getBackwardVariable_(*it2) << " * " << getTransitionProbability(*it_inner, *it2) << endl;
 #endif
-            sum += getBackwardVariable_(*it2) * getTransitionProbability_(*it, *it2);
-            trained_trans_.insert(make_pair(*it, *it2));
+            sum += getBackwardVariable_(*it2) * getTransitionProbability_(*it_inner, *it2);
+            trained_trans_.insert(make_pair(*it_inner, *it2));
           }
-          backward_[*it] = sum;
-          pre_new.insert((*it)->getPredecessorStates().begin(), (*it)->getPredecessorStates().end());
+          backward_[*it_inner] = sum;
+          pre_new.insert((*it_inner)->getPredecessorStates().begin(), (*it_inner)->getPredecessorStates().end());
 #ifdef HIDDEN_MARKOV_MODEL_DEBUG
-          cerr << "b: " << (*it)->getName() << "\t" << sum << endl;
+          cerr << "b: " << (*it_inner)->getName() << "\t" << sum << endl;
 #endif
         }
         pre = pre_new;
@@ -841,17 +841,17 @@ namespace OpenMS
   void HiddenMarkovModel::forwardDump()
   {
     set<HMMState *> succ;
-    for (Map<HMMState *, double>::iterator it = init_prob_.begin(); it != init_prob_.end(); ++it)
+    for (Map<HMMState *, double>::iterator it_outer = init_prob_.begin(); it_outer != init_prob_.end(); ++it_outer)
     {
-      succ.insert(it->first->getSuccessorStates().begin(), it->first->getSuccessorStates().end());
+      succ.insert(it_outer->first->getSuccessorStates().begin(), it_outer->first->getSuccessorStates().end());
 
       while (!succ.empty())
       {
         set<HMMState *> succ_new;
-        for (set<HMMState *>::const_iterator it = succ.begin(); it != succ.end(); ++it)
+        for (set<HMMState *>::const_iterator it_inner = succ.begin(); it_inner != succ.end(); ++it_inner)
         {
-          cerr << (*it)->getName() << endl;
-          succ_new.insert((*it)->getSuccessorStates().begin(), (*it)->getSuccessorStates().end());
+          cerr << (*it_inner)->getName() << endl;
+          succ_new.insert((*it_inner)->getSuccessorStates().begin(), (*it_inner)->getSuccessorStates().end());
         }
         succ = succ_new;
       }
